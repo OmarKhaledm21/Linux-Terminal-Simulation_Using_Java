@@ -1,5 +1,5 @@
 import java.io.*;
-import java.nio.file.Path;
+import java.nio.file.*;
 import java.util.ArrayList;
 
 import java.util.Arrays;
@@ -129,13 +129,14 @@ public class Terminal {
         }
 
     }
+
     public  void cp() {
         String fname1 = parser.getArgs()[0];
         String fname2 = parser.getArgs()[1];
         File fin= new File(fname1);
         FileWriter fout = null;
         try {
-             fout=new FileWriter(fname2,true);
+            fout=new FileWriter(fname2,true);
         }catch (Exception e ){
             e.printStackTrace();
         }
@@ -150,8 +151,43 @@ public class Terminal {
         }catch (Exception e){
             e.printStackTrace();
         }
-
-
+    }
+    public void cat() {
+        if (parser.getArgs().length>1) {
+            String fname1 = parser.getArgs()[0];
+            String fname2 = parser.getArgs()[1];
+            File file1 = new File(fname1);
+            File file2 = new File(fname2);
+            try {
+                Scanner reader = new Scanner(file1);
+                while (reader.hasNextLine()) {
+                    String line = reader.nextLine();
+                    System.out.println(line);
+                }
+                reader.close();
+                reader = new Scanner(file2);
+                while (reader.hasNextLine()) {
+                    String line = reader.nextLine();
+                    System.out.println(line);
+                }
+                reader.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } else {
+            String fname1 = parser.getArgs()[0];
+            File file1 = new File(fname1);
+            try {
+                Scanner reader = new Scanner(file1);
+                while (reader.hasNextLine()) {
+                    String line = reader.nextLine();
+                    System.out.println(line);
+                }
+                reader.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     public void chooseCommandAction(){
@@ -179,6 +215,9 @@ public class Terminal {
                 break;
             case"cp":
                 cp();
+                break;
+            case"cat":
+                cat();
                 break;
             case "exit":
                 break;

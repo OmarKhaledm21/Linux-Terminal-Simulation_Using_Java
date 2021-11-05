@@ -1,6 +1,4 @@
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.nio.file.Path;
 import java.util.ArrayList;
 
@@ -67,6 +65,7 @@ public class Terminal {
 
     public void touch() {
         String fileName = parser.getArgs()[0];
+
         File file = new File(currentDir+"\\"+fileName);
         try
         {
@@ -85,7 +84,7 @@ public class Terminal {
             if (isCreated) {
                 System.out.println("Directory created successfully!");
             } else {
-                System.out.println("Error occurred while creating dictionary!");
+                System.out.println("Error occurred while creating directory");
             }
         }else if(parser.getArgs().length>1){
 
@@ -106,6 +105,52 @@ public class Terminal {
     }
 
     public void rmdir(){
+        if(parser.getArgs().length <=1) {
+            File dir = new File(currentDir +"\\"+ parser.getArgs()[0]);
+            boolean isDeleted = dir.delete();
+            if (isDeleted) {
+                System.out.println("Directory deleted successfully!");
+            } else {
+                System.out.println("Error occurred while deleting directory!");
+            }
+        }else if(parser.getArgs().length>1){
+
+            String new_path = "\\";
+            for (int i = 0; i < parser.getArgs().length; i++) {
+                new_path += (parser.getArgs()[i] + "\\");
+            }
+            File dir = new File(currentDir+new_path);
+            boolean isDeleted = dir.delete();
+            if (isDeleted) {
+                System.out.println("Directory deleted successfully!");
+            } else {
+                System.out.println("Error occurred while deleting directory!");
+            }
+        }
+
+    }
+    public  void cp() {
+        String fname1 = parser.getArgs()[0];
+        String fname2 = parser.getArgs()[1];
+        File fin= new File(fname1);
+        FileWriter fout = null;
+        try {
+             fout=new FileWriter(fname2,true);
+        }catch (Exception e ){
+            e.printStackTrace();
+        }
+        try {
+            Scanner reader = new Scanner(fin);
+            while (reader.hasNextLine()){
+                String line = reader.nextLine();
+                fout.write(line);
+            }
+            fout.close();
+            reader.close();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
 
     }
 
@@ -128,6 +173,12 @@ public class Terminal {
                 break;
             case "mkdir":
                 mkdir();
+                break;
+            case"rmdir":
+                rmdir();
+                break;
+            case"cp":
+                cp();
                 break;
             case "exit":
                 break;

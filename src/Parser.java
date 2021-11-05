@@ -4,6 +4,10 @@ class Parser {
     String commandName;
     String[] args;
 
+    public Parser(){
+        commandName="";
+        args=null;
+    }
     //This method will divide the input into commandName and args
     //where "input" is the string command entered by the user
     public boolean parse(String input){

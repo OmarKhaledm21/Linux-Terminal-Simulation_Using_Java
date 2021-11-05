@@ -1,6 +1,8 @@
 import java.io.File;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Scanner;
 
 public class Terminal {
@@ -33,12 +35,24 @@ public class Terminal {
         //list of files and folders in directory.
         File[] list = direct.listFiles();
         //loop through files and after it finishes its returns targeted file path.
+        ArrayList fileNames = new ArrayList();
+
         for (File f : list) {
-            System.out.println(f.getName());
+            fileNames.add(f.getName());
+        }
+
+        if(!(parser.getArgs()[0].contains("-r"))) {
+            for(int j=0; j<fileNames.size(); j++){
+                System.out.println(fileNames.get(j));
+            }
+        }else{
+            Collections.reverse(fileNames);
+            for(int j=0; j<fileNames.size(); j++){
+                System.out.println(fileNames.get(j));
+            }
         }
     }
 
-    //This method will choose the suitable command method to be called
     public void chooseCommandAction(){
         switch (parser.getCommandName()){
             case "pwd":
@@ -48,7 +62,7 @@ public class Terminal {
                 cd(parser.getArgs());
                 break;
             case "ls":
-                ls(Path.of("").toAbsolutePath().toString());
+                ls(currentDir);
             default:
                 break;
         }

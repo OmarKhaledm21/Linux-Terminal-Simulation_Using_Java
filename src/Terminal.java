@@ -77,6 +77,38 @@ public class Terminal {
         catch (IOException e) {e.printStackTrace(); }
     }
 
+
+    public void mkdir(){
+        if(parser.getArgs().length <=1) {
+            File dir = new File(currentDir +"\\"+ parser.getArgs()[0]);
+            boolean isCreated = dir.mkdir();
+            if (isCreated) {
+                System.out.println("Directory created successfully!");
+            } else {
+                System.out.println("Error occurred while creating dictionary!");
+            }
+        }else if(parser.getArgs().length>1){
+
+            String new_path = "\\";
+            for (int i = 0; i < parser.getArgs().length; i++) {
+                new_path += (parser.getArgs()[i] + "\\");
+                File dir = new File(currentDir + new_path);
+                boolean isCreated = dir.mkdir();
+                if (isCreated) {
+                    System.out.println("Directory created successfully!");
+                } else if(!(isCreated) && !(dir.exists())){
+                    System.out.println("Error: occurred while creating directory!");
+                }else{
+                    System.out.println("Error: directory already exists!");
+                }
+            }
+        }
+    }
+
+    public void rmdir(){
+
+    }
+
     public void chooseCommandAction(){
         switch (parser.getCommandName()){
             case "echo":
@@ -94,7 +126,11 @@ public class Terminal {
             case "touch":
                 touch();
                 break;
+            case "mkdir":
+                mkdir();
+                break;
             default:
+                System.out.println("Command not available!");
                 break;
         }
     }

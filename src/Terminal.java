@@ -31,14 +31,19 @@ public class Terminal {
         }
     }
 
+    public boolean double_redirection_checker(){
+        return (Arrays.toString(parser.getArgs()).contains(">>"));
+    }
+
     public boolean redirection_checker(){
         return (Arrays.toString(parser.getArgs()).contains(">"));
     }
 
     public void redirect(){
+        boolean drc = double_redirection_checker();
         FileWriter file=null;
         try {
-            file = new FileWriter((parser.getArgs()[parser.getArgs().length-1]),true);
+            file = new FileWriter((parser.getArgs()[parser.getArgs().length-1]),drc);
             for(int i=0; i<parser.getArgs().length-2; i++){
                 String temp = parser.getArgs()[i];
                 file.write("\n"+temp);
@@ -59,13 +64,14 @@ public class Terminal {
             fileNames.add(f.getName());
         }
 
-        if(redirection_checker()){
+        if(redirection_checker() || double_redirection_checker()){
+            boolean drc = double_redirection_checker();
             FileWriter fileWriter = null;
             try {
-                fileWriter = new FileWriter(parser.getArgs()[parser.getArgs().length-1],true);
+                fileWriter = new FileWriter(parser.getArgs()[parser.getArgs().length-1],drc);
                 for(int i=0; i<fileNames.size(); i++){
                     String temp = fileNames.get(i).toString();
-                    fileWriter.write("\n"+ temp);
+                    fileWriter.write("\n"+temp);
                 }
                 fileWriter.close();
             }catch (IOException e){
@@ -105,7 +111,6 @@ public class Terminal {
         for(int i=0; i<parser.getArgs().length; i++){
             path.append(parser.getArgs()[i]);
         }
-        //String fileName = parser.getArgs()[0];
 
         File file = new File(currentDir+"\\"+path.toString());
         try

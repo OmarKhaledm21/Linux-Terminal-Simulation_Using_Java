@@ -236,6 +236,16 @@ public class Terminal {
         }
     }
 
+    public void rm(){
+        File file = new File(parser.getArgs()[0]);
+        if(file.delete()){
+            System.out.println("File: "+file.getName()+" is deleted");
+        }else{
+            System.out.println("Error File: "+file.getName()+" is not deleted");
+
+        }
+    }
+
     public void chooseCommandAction(){
         switch (parser.getCommandName()){
             case "echo":
@@ -264,6 +274,9 @@ public class Terminal {
                 break;
             case"cat":
                 cat();
+                break;
+            case "rm":
+                rm();
                 break;
             case "exit":
                 break;

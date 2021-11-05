@@ -129,6 +129,8 @@ public class Terminal {
             case "mkdir":
                 mkdir();
                 break;
+            case "exit":
+                break;
             default:
                 System.out.println("Command not available!");
                 break;

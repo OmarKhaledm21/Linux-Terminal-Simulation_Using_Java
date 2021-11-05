@@ -1,7 +1,10 @@
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.nio.file.Path;
 import java.util.ArrayList;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Scanner;
 
@@ -11,11 +14,11 @@ public class Terminal {
 
     public Terminal(){
         parser = new Parser();
-        currentDir = pwd();
+        currentDir = Path.of("").toAbsolutePath().toString();
     }
 
     public String pwd(){
-        return Path.of("").toAbsolutePath().toString();
+        return currentDir;
     }
 
     public void cd(String[] args){
@@ -62,6 +65,18 @@ public class Terminal {
         System.out.println(output);
     }
 
+    public void touch() {
+        String fileName = parser.getArgs()[0];
+        File file = new File(currentDir+"\\"+fileName);
+        try
+        {
+            if (!file.exists()) {
+                new FileOutputStream(file).close();
+            }
+        }
+        catch (IOException e) {e.printStackTrace(); }
+    }
+
     public void chooseCommandAction(){
         switch (parser.getCommandName()){
             case "echo":
@@ -75,6 +90,10 @@ public class Terminal {
                 break;
             case "ls":
                 ls(currentDir);
+                break;
+            case "touch":
+                touch();
+                break;
             default:
                 break;
         }

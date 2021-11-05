@@ -31,29 +31,6 @@ public class Terminal {
         }
     }
 
-    public void ls(String path){
-        File direct = new File(path);
-        //list of files and folders in directory.
-        File[] list = direct.listFiles();
-        //loop through files and after it finishes its returns targeted file path.
-        ArrayList fileNames = new ArrayList();
-
-        for (File f : list) {
-            fileNames.add(f.getName());
-        }
-
-        if(!(parser.getArgs()[0].contains("-r"))) {
-            for(int j=0; j<fileNames.size(); j++){
-                System.out.println(fileNames.get(j));
-            }
-        }else{
-            Collections.reverse(fileNames);
-            for(int j=0; j<fileNames.size(); j++){
-                System.out.println(fileNames.get(j));
-            }
-        }
-    }
-
     public boolean redirection_checker(){
         return (Arrays.toString(parser.getArgs()).contains(">"));
     }
@@ -70,6 +47,44 @@ public class Terminal {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public void ls(String path){
+
+        File direct = new File(path);
+        File[] list = direct.listFiles();
+        ArrayList fileNames = new ArrayList();
+
+        for (File f : list) {
+            fileNames.add(f.getName());
+        }
+
+        if(redirection_checker()){
+            FileWriter fileWriter = null;
+            try {
+                fileWriter = new FileWriter(parser.getArgs()[parser.getArgs().length-1],true);
+                for(int i=0; i<fileNames.size(); i++){
+                    String temp = fileNames.get(i).toString();
+                    fileWriter.write("\n"+ temp);
+                }
+                fileWriter.close();
+            }catch (IOException e){
+                e.printStackTrace();
+            }
+        }else {
+            if (!(parser.getArgs()[0].contains("-r"))) {
+                for (int j = 0; j < fileNames.size(); j++) {
+                    System.out.println(fileNames.get(j));
+                }
+            } else {
+                Collections.reverse(fileNames);
+                for (int j = 0; j < fileNames.size(); j++) {
+                    System.out.println(fileNames.get(j));
+                }
+            }
+        }
+
+
     }
 
     public void echo(){

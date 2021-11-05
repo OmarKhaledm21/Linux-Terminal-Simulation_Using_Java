@@ -54,13 +54,35 @@ public class Terminal {
         }
     }
 
-    public void echo(){
-        StringBuilder output = new StringBuilder();
-        for(int i=0; i<parser.getArgs().length; i++){
-            output.append(parser.getArgs()[i]);
-            output.append(" ");
+    public boolean redirection_checker(){
+        return (Arrays.toString(parser.getArgs()).contains(">"));
+    }
+
+    public void redirect(){
+        FileWriter file=null;
+        try {
+            file = new FileWriter((parser.getArgs()[parser.getArgs().length-1]),true);
+            for(int i=0; i<parser.getArgs().length-2; i++){
+                String temp = parser.getArgs()[i];
+                file.write("\n"+temp);
+            }
+            file.close();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-        System.out.println(output);
+    }
+
+    public void echo(){
+        if(redirection_checker()){
+            redirect();
+        }else{
+            StringBuilder output = new StringBuilder();
+            for(int i=0; i<parser.getArgs().length; i++){
+                output.append(parser.getArgs()[i]);
+                output.append(" ");
+            }
+            System.out.println(output);
+        }
     }
 
     public void touch() {
@@ -95,7 +117,7 @@ public class Terminal {
                 boolean isCreated = dir.mkdir();
                 if (isCreated) {
                     System.out.println("Directory created successfully!");
-                } else if(!(isCreated) && !(dir.exists())){
+                } else if(!(dir.exists())){
                     System.out.println("Error: occurred while creating directory!");
                 }else{
                     System.out.println("Error: directory already exists!");

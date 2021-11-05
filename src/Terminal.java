@@ -86,9 +86,13 @@ public class Terminal {
     }
 
     public void touch() {
-        String fileName = parser.getArgs()[0];
+        StringBuilder path = new StringBuilder();
+        for(int i=0; i<parser.getArgs().length; i++){
+            path.append(parser.getArgs()[i]);
+        }
+        //String fileName = parser.getArgs()[0];
 
-        File file = new File(currentDir+"\\"+fileName);
+        File file = new File(currentDir+"\\"+path.toString());
         try
         {
             if (!file.exists()) {

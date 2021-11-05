@@ -1,7 +1,7 @@
 import java.io.File;
 import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.Arrays;
+
 import java.util.Collections;
 import java.util.Scanner;
 
@@ -53,13 +53,25 @@ public class Terminal {
         }
     }
 
+    public void echo(){
+        StringBuilder output = new StringBuilder();
+        for(int i=0; i<parser.getArgs().length; i++){
+            output.append(parser.getArgs()[i]);
+            output.append(" ");
+        }
+        System.out.println(output);
+    }
+
     public void chooseCommandAction(){
         switch (parser.getCommandName()){
+            case "echo":
+                echo();
+                break;
             case "pwd":
                 System.out.println(pwd());
                 break;
             case "cd":
-                cd(parser.getArgs());
+                //cd(parser.getArgs());
                 break;
             case "ls":
                 ls(currentDir);

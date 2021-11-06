@@ -15,8 +15,7 @@ class Parser {
         commandName="";
         args=null;
     }
-    //This method will divide the input into commandName and args
-    //where "input" is the string command entered by the user
+
     public boolean parse(String input){
         commandName = input.split(" ")[0];
         input = input.substring(input.indexOf(" ")+1);
@@ -48,35 +47,34 @@ public class Terminal {
     }
 
     public void cd(){
-//        String[] currentPath = currentDir.split(" ");
-//        if(currentDir.contains(args[0])){
-//            StringBuilder new_dir = new StringBuilder();
-//            for(int i=0; i<currentDir.length(); i++){
-//                if(!(currentDir.equals(args[0]))){
-//
-//                }
-//            }
-//        }
         String path = "";
-        if (parser.getArgs().length==0){
-            System.out.println(currentDir);
-        }
-        else{
-            if (parser.getArgs()[0].equals("~")){
+        if (parser.getArgs()[0].equals("cd")){
             path="C:\\Users\\"+System.getProperty("user.name");
             currentDir=path;
-            //System.out.println(path);
-            }else if (parser.getArgs()[0].equals("..")){
-                System.out.println("not yet implemented");
-            }else {
-                path=parser.getArgs()[0];
-                File file = new File(path);
-                if (file.isDirectory()){
-                    currentDir=path;
-                    //System.out.println(path);
-                }else{
-                    System.out.println("path not found");
-                }
+        }else if(parser.getArgs()[0].equals("~")){
+
+        }else if (parser.getArgs()[0].equals("..")){
+            String[] temp_path = currentDir.split("\\\\");
+
+            path += temp_path[0];
+            if(temp_path.length==2 || temp_path.length==1){
+                path+="\\";
+            }
+
+            for(int i=1; i<temp_path.length-1; i++){
+                path += "\\";
+                path += temp_path[i];
+            }
+            currentDir = path;
+
+        }else {
+            path=parser.getArgs()[0];
+            File file = new File(path);
+            if (file.isDirectory()){
+                currentDir=path;
+                //System.out.println(path);
+            }else{
+                System.out.println("path not found");
             }
         }
     }
@@ -159,7 +157,7 @@ public class Terminal {
             redirect();
         }else{
             StringBuilder output = new StringBuilder();
-            for(int i=1; i<parser.getArgs().length; i++){
+            for(int i=0; i<parser.getArgs().length; i++){
                 output.append(parser.getArgs()[i]);
                 output.append(" ");
             }

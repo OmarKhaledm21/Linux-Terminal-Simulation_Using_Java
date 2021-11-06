@@ -34,8 +34,8 @@ class Parser {
 
 
 public class Terminal {
-    Parser parser;
-    String currentDir;
+    private Parser parser;
+    private String currentDir;
 
     public Terminal(){
         parser = new Parser();
@@ -51,11 +51,8 @@ public class Terminal {
         if (parser.getArgs()[0].equals("cd")){
             path="C:\\Users\\"+System.getProperty("user.name");
             currentDir=path;
-        }else if(parser.getArgs()[0].equals("~")){
-
         }else if (parser.getArgs()[0].equals("..")){
             String[] temp_path = currentDir.split("\\\\");
-
             path += temp_path[0];
             if(temp_path.length==2 || temp_path.length==1){
                 path+="\\";
@@ -66,13 +63,12 @@ public class Terminal {
                 path += temp_path[i];
             }
             currentDir = path;
-
-        }else {
+        }else{
             path=parser.getArgs()[0];
             File file = new File(path);
             if (file.isDirectory()){
                 currentDir=path;
-                //System.out.println(path);
+                System.out.println(path);
             }else{
                 System.out.println("path not found");
             }
@@ -88,29 +84,23 @@ public class Terminal {
     }
 
     public void redirect(){
-        try{
-            boolean drc = double_redirection_checker();
-            FileWriter file=null;
-            try {
-                file = new FileWriter((parser.getArgs()[parser.getArgs().length-1]),drc);
-                for(int i=0; i<parser.getArgs().length-2; i++){
-                    String temp = parser.getArgs()[i];
-                    file.write("\n"+temp);
-                }
-                file.close();
-            } catch (IOException e) {
-                e.printStackTrace();
+        boolean drc = double_redirection_checker();
+        FileWriter file=null;
+        try {
+            file = new FileWriter((parser.getArgs()[parser.getArgs().length-1]),drc);
+            for(int i=0; i<parser.getArgs().length-2; i++){
+                String temp = parser.getArgs()[i];
+                file.write("\n"+temp);
             }
-        }
-        catch(Exception e){
-            System.out.println("Error occurred");
+            file.close();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
 
 
     public void ls(String path){
-        try{
         File direct = new File(path);
         File[] list = direct.listFiles();
         ArrayList fileNames = new ArrayList();
@@ -144,12 +134,6 @@ public class Terminal {
                 }
             }
         }
-
-
-    }
-        catch (Exception e ){
-            System.out.println("Error occurred");
-        }
     }
 
     public void echo(){
@@ -172,15 +156,14 @@ public class Terminal {
         }
 
         File file = new File(currentDir+"\\"+path.toString());
-        try
-        {
+
+        try {
             if (!file.exists()) {
                 new FileOutputStream(file).close();
             }else {
                 System.out.println("File Exists");
             }
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             System.out.println("Error occurred");
         }
     }
@@ -214,100 +197,87 @@ public class Terminal {
     }
 
     public void rmdir(){
-        if(parser.getArgs().length <=1) {
-            File dir = new File(currentDir +"\\"+ parser.getArgs()[0]);
-            boolean isDeleted = dir.delete();
-            if (isDeleted) {
-                System.out.println("Directory deleted successfully!");
-            } else {
-                System.out.println("Error occurred while deleting directory!");
-            }
-        }else if(parser.getArgs().length>1){
+        File dir =null;
 
+        if(parser.getArgs().length <=1) {
+            dir = new File(currentDir +"\\"+ parser.getArgs()[0]);
+        }else if(parser.getArgs().length>1){
             String new_path = "\\";
             for (int i = 0; i < parser.getArgs().length; i++) {
                 new_path += (parser.getArgs()[i] + "\\");
             }
-            File dir = new File(currentDir+new_path);
-            boolean isDeleted = dir.delete();
-            if (isDeleted) {
-                System.out.println("Directory deleted successfully!");
-            } else {
-                System.out.println("Error occurred while deleting directory!");
-            }
+            dir = new File(currentDir+new_path);
+        }
+
+        boolean isDeleted = dir.delete();
+        if (isDeleted) {
+            System.out.println("Directory deleted successfully!");
+        } else if(dir.exists()){
+            System.out.println("Error: directory contains files!");
+        }else{
+            System.out.println("Error: directory doesn't exist!");
         }
 
     }
 
     public  void cp() {
+        String fname1 = parser.getArgs()[0];
+        String fname2 = parser.getArgs()[1];
+        File fin= new File(fname1);
+        FileWriter fout = null;
+
         try {
-            String fname1 = parser.getArgs()[0];
-            String fname2 = parser.getArgs()[1];
-            File fin= new File(fname1);
-            FileWriter fout = null;
-            try {
-                fout=new FileWriter(fname2,true);
-            }catch (Exception e ){
-                e.printStackTrace();
+            fout = new FileWriter(fname2,true);
+            Scanner reader = new Scanner(fin);
+            while (reader.hasNextLine()){
+                String line = reader.nextLine();
+                fout.write(line);
             }
-            try {
-                Scanner reader = new Scanner(fin);
-                while (reader.hasNextLine()){
-                    String line = reader.nextLine();
-                    fout.write(line);
-                }
-                fout.close();
-                reader.close();
-            }catch (Exception e){
-                e.printStackTrace();
-            }
-        }
-        catch (Exception e ){
-            System.out.println("Error occurred");
+            fout.close();
+            reader.close();
+        }catch (Exception e ){
+            e.printStackTrace();
         }
     }
 
     public void cat() {
         try {
-
-
-        if (parser.getArgs().length>1) {
-            String fname1 = parser.getArgs()[0];
-            String fname2 = parser.getArgs()[1];
-            File file1 = new File(fname1);
-            File file2 = new File(fname2);
-            try {
-                Scanner reader = new Scanner(file1);
-                while (reader.hasNextLine()) {
-                    String line = reader.nextLine();
-                    System.out.println(line);
+            if (parser.getArgs().length>1) {
+                String fname1 = parser.getArgs()[0];
+                String fname2 = parser.getArgs()[1];
+                File file1 = new File(fname1);
+                File file2 = new File(fname2);
+                try {
+                    Scanner reader = new Scanner(file1);
+                    while (reader.hasNextLine()) {
+                        String line = reader.nextLine();
+                        System.out.println(line);
+                    }
+                    reader.close();
+                    reader = new Scanner(file2);
+                    while (reader.hasNextLine()) {
+                        String line = reader.nextLine();
+                        System.out.println(line);
+                    }
+                    reader.close();
+                } catch (Exception e) {
+                    System.out.println("Error occurred");
                 }
-                reader.close();
-                reader = new Scanner(file2);
-                while (reader.hasNextLine()) {
-                    String line = reader.nextLine();
-                    System.out.println(line);
+            } else {
+                String fname1 = parser.getArgs()[0];
+                File file1 = new File(fname1);
+                try {
+                    Scanner reader = new Scanner(file1);
+                    while (reader.hasNextLine()) {
+                        String line = reader.nextLine();
+                        System.out.println(line);
+                    }
+                    reader.close();
+                } catch (Exception e) {
+                    System.out.println("Error occurred");
                 }
-                reader.close();
-            } catch (Exception e) {
-                System.out.println("Error occurred");
             }
-        } else {
-            String fname1 = parser.getArgs()[0];
-            File file1 = new File(fname1);
-            try {
-                Scanner reader = new Scanner(file1);
-                while (reader.hasNextLine()) {
-                    String line = reader.nextLine();
-                    System.out.println(line);
-                }
-                reader.close();
-            } catch (Exception e) {
-                System.out.println("Error occurred");
-            }
-        }
-        }
-        catch (Exception e){
+        } catch (Exception e){
             System.out.println("Error occurred");
         }
 
@@ -365,19 +335,25 @@ public class Terminal {
     }
 
     public String getCurrentDir(){
-        return currentDir;
+        return this.currentDir;
+    }
+
+    public Parser getParser(){
+        return this.parser;
     }
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-        String input="";
         Terminal terminal = new Terminal();
+        String input="";
 
         while (!input.equals("exit")){
             System.out.print(terminal.getCurrentDir()+"$: ");
             input = scanner.nextLine();
-            terminal.parser.parse(input);
+            terminal.getParser().parse(input);
             terminal.chooseCommandAction();
         }
+
+        scanner.close();
     }
 }

@@ -37,7 +37,7 @@ public class Terminal {
             if (parser.getArgs()[0].equals("~")){
             path="C:\\Users\\"+System.getProperty("user.name");
             currentDir=path;
-            System.out.println(path);
+            //System.out.println(path);
             }else if (parser.getArgs()[0].equals("..")){
                 System.out.println("not yet implemented");
             }else {
@@ -45,7 +45,7 @@ public class Terminal {
                 File file = new File(path);
                 if (file.isDirectory()){
                     currentDir=path;
-                    System.out.println(path);
+                    //System.out.println(path);
                 }else{
                     System.out.println("path not found");
                 }

@@ -40,22 +40,29 @@ public class Terminal {
     }
 
     public void redirect(){
-        boolean drc = double_redirection_checker();
-        FileWriter file=null;
-        try {
-            file = new FileWriter((parser.getArgs()[parser.getArgs().length-1]),drc);
-            for(int i=0; i<parser.getArgs().length-2; i++){
-                String temp = parser.getArgs()[i];
-                file.write("\n"+temp);
+        try{
+            boolean drc = double_redirection_checker();
+            FileWriter file=null;
+            try {
+                file = new FileWriter((parser.getArgs()[parser.getArgs().length-1]),drc);
+                for(int i=0; i<parser.getArgs().length-2; i++){
+                    String temp = parser.getArgs()[i];
+                    file.write("\n"+temp);
+                }
+                file.close();
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-            file.close();
-        } catch (IOException e) {
-            e.printStackTrace();
+        }
+        catch(Exception e){
+            System.out.println("Error occurred");
         }
     }
 
-    public void ls(String path){
 
+
+    public void ls(String path){
+        try{
         File direct = new File(path);
         File[] list = direct.listFiles();
         ArrayList fileNames = new ArrayList();
@@ -92,13 +99,17 @@ public class Terminal {
 
 
     }
+        catch (Exception e ){
+            System.out.println("Error occurred");
+        }
+    }
 
     public void echo(){
         if(redirection_checker()){
             redirect();
         }else{
             StringBuilder output = new StringBuilder();
-            for(int i=0; i<parser.getArgs().length; i++){
+            for(int i=1; i<parser.getArgs().length; i++){
                 output.append(parser.getArgs()[i]);
                 output.append(" ");
             }
@@ -117,9 +128,13 @@ public class Terminal {
         {
             if (!file.exists()) {
                 new FileOutputStream(file).close();
+            }else {
+                System.out.println("File Exists");
             }
         }
-        catch (IOException e) {e.printStackTrace(); }
+        catch (IOException e) {
+            System.out.println("Error occurred");
+        }
     }
 
 
@@ -177,28 +192,37 @@ public class Terminal {
     }
 
     public  void cp() {
-        String fname1 = parser.getArgs()[0];
-        String fname2 = parser.getArgs()[1];
-        File fin= new File(fname1);
-        FileWriter fout = null;
         try {
-            fout=new FileWriter(fname2,true);
-        }catch (Exception e ){
-            e.printStackTrace();
-        }
-        try {
-            Scanner reader = new Scanner(fin);
-            while (reader.hasNextLine()){
-                String line = reader.nextLine();
-                fout.write(line);
+            String fname1 = parser.getArgs()[0];
+            String fname2 = parser.getArgs()[1];
+            File fin= new File(fname1);
+            FileWriter fout = null;
+            try {
+                fout=new FileWriter(fname2,true);
+            }catch (Exception e ){
+                e.printStackTrace();
             }
-            fout.close();
-            reader.close();
-        }catch (Exception e){
-            e.printStackTrace();
+            try {
+                Scanner reader = new Scanner(fin);
+                while (reader.hasNextLine()){
+                    String line = reader.nextLine();
+                    fout.write(line);
+                }
+                fout.close();
+                reader.close();
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+        }
+        catch (Exception e ){
+            System.out.println("Error occurred");
         }
     }
+
     public void cat() {
+        try {
+
+
         if (parser.getArgs().length>1) {
             String fname1 = parser.getArgs()[0];
             String fname2 = parser.getArgs()[1];
@@ -218,7 +242,7 @@ public class Terminal {
                 }
                 reader.close();
             } catch (Exception e) {
-                e.printStackTrace();
+                System.out.println("Error occurred");
             }
         } else {
             String fname1 = parser.getArgs()[0];
@@ -231,10 +255,16 @@ public class Terminal {
                 }
                 reader.close();
             } catch (Exception e) {
-                e.printStackTrace();
+                System.out.println("Error occurred");
             }
         }
+        }
+        catch (Exception e){
+            System.out.println("Error occurred");
+        }
+
     }
+
 
     public void rm(){
         File file = new File(parser.getArgs()[0]);

@@ -43,6 +43,18 @@ public class Terminal {
     }
 
     public String pwd(){
+        if(redirection_checker() || double_redirection_checker()){
+            boolean drc = double_redirection_checker();
+            FileWriter file=null;
+            try {
+                file = new FileWriter((parser.getArgs()[parser.getArgs().length-1]),drc);
+                file.write(currentDir);
+                file.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return "";
+        }
         return currentDir;
     }
 
@@ -97,8 +109,6 @@ public class Terminal {
             e.printStackTrace();
         }
     }
-
-
 
     public void ls(String path){
         File direct = new File(path);

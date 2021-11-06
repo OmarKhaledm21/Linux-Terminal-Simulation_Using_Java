@@ -19,13 +19,35 @@ public class Terminal {
         return currentDir;
     }
 
-    public void cd(String[] args){
-        String[] currentPath = currentDir.split(" ");
-        if(currentDir.contains(args[0])){
-            StringBuilder new_dir = new StringBuilder();
-            for(int i=0; i<currentDir.length(); i++){
-                if(!(currentDir.equals(args[0]))){
-
+    public void cd(){
+//        String[] currentPath = currentDir.split(" ");
+//        if(currentDir.contains(args[0])){
+//            StringBuilder new_dir = new StringBuilder();
+//            for(int i=0; i<currentDir.length(); i++){
+//                if(!(currentDir.equals(args[0]))){
+//
+//                }
+//            }
+//        }
+        String path = "";
+        if (parser.getArgs().length==0){
+            System.out.println(currentDir);
+        }
+        else{
+            if (parser.getArgs()[0].equals("~")){
+            path="C:\\Users\\"+System.getProperty("user.name");
+            currentDir=path;
+            System.out.println(path);
+            }else if (parser.getArgs()[0].equals("..")){
+                System.out.println("not yet implemented");
+            }else {
+                path=parser.getArgs()[0];
+                File file = new File(path);
+                if (file.isDirectory()){
+                    currentDir=path;
+                    System.out.println(path);
+                }else{
+                    System.out.println("path not found");
                 }
             }
         }
@@ -285,7 +307,7 @@ public class Terminal {
                 System.out.println(pwd());
                 break;
             case "cd":
-                //cd(parser.getArgs());
+                cd();
                 break;
             case "ls":
                 ls(currentDir);

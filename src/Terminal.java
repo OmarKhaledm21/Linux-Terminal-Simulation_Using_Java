@@ -77,10 +77,13 @@ public class Terminal {
             currentDir = path;
         }else{
             path=parser.getArgs()[0];
+            for(int i=1; i<parser.getArgs().length; i++){
+                path+= " "+parser.getArgs()[i];
+            }
+
             File file = new File(path);
             if (file.isDirectory()){
-                currentDir=path;
-                System.out.println(path);
+                currentDir=file.getAbsolutePath();
             }else{
                 System.out.println("path not found");
             }

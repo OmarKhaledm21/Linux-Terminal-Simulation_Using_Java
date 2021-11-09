@@ -26,7 +26,6 @@ class Parser {
     public String getCommandName(){
         return commandName.trim();
     }
-
     public String[] getArgs(){
         return args;
     }
@@ -35,15 +34,19 @@ class Parser {
 
 public class Terminal {
     private Parser parser;
-    private String currentDir;
+    private String currentDir; //A String variable to store current directory.
 
+    //Initializing class attributes.
     public Terminal(){
         parser = new Parser();
         currentDir = Path.of("").toAbsolutePath().toString();
     }
 
+    //Get and return current working directory.
     public String pwd(){
+        //Condition that checks for the presence of either >> or > as in such cases pwd will be printed to file.
         if(redirection_checker() || double_redirection_checker()){
+            //drc detect wether its a single or double redirection checker such as to append to file or override its contents.
             boolean drc = double_redirection_checker();
             FileWriter file=null;
             try {
@@ -58,12 +61,14 @@ public class Terminal {
         return currentDir;
     }
 
+    //Function that changes the current directory and changes value of currentDir to the new directory.
     public void cd(){
         String path = "";
         if (parser.getArgs()[0].equals("cd")){
             path="C:\\Users\\"+System.getProperty("user.name");
             currentDir=path;
         }else if (parser.getArgs()[0].equals("..")){
+            //Splits current directory base on \'s and starts to pop one directory at a time.
             String[] temp_path = currentDir.split("\\\\");
             path += temp_path[0];
             if(temp_path.length==2 || temp_path.length==1){
@@ -90,14 +95,17 @@ public class Terminal {
         }
     }
 
+    //Checks the argument array for the >> sign
     public boolean double_redirection_checker(){
         return (Arrays.toString(parser.getArgs()).contains(">>"));
     }
 
+    //Checks the argument array for the > sign
     public boolean redirection_checker(){
         return (Arrays.toString(parser.getArgs()).contains(">"));
     }
 
+    //Used by echo where >> or > types echoed arguments into the file after the > or >> signs.
     public void redirect(){
         boolean drc = double_redirection_checker();
         FileWriter file=null;
@@ -113,6 +121,7 @@ public class Terminal {
         }
     }
 
+    //List the files and folders in the current directory
     public void ls(String path){
         File direct = new File(path);
         File[] list = direct.listFiles();
@@ -122,6 +131,7 @@ public class Terminal {
             fileNames.add(f.getName());
         }
 
+        //Checks for > or >> as if they are present we write files and folders names to .txt file.
         if(redirection_checker() || double_redirection_checker()){
             boolean drc = double_redirection_checker();
             FileWriter fileWriter = null;
@@ -149,6 +159,7 @@ public class Terminal {
         }
     }
 
+    //Prints output to screen
     public void echo(){
         if(redirection_checker()){
             redirect();
@@ -162,6 +173,7 @@ public class Terminal {
         }
     }
 
+    //Create a file into a certain path or at the current path if no full or short paths are passed.
     public void touch() {
         StringBuilder path = new StringBuilder();
         for(int i=0; i<parser.getArgs().length; i++){
@@ -181,7 +193,7 @@ public class Terminal {
         }
     }
 
-
+    //Making new directories by path or just new dir name.
     public void mkdir(){
         if(parser.getArgs().length <=1) {
             File dir = new File(currentDir +"\\"+ parser.getArgs()[0]);

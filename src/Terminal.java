@@ -90,18 +90,18 @@ public class Terminal {
             if (file.isDirectory()){
                 currentDir=file.getAbsolutePath();
             }else if(!path.startsWith(currentDir.split("\\\\")[0])){
-                    path="";
-                    path = currentDir;
-                    for(int i=0; i<parser.getArgs().length; i++){
-                        path+="\\";
-                        path += parser.getArgs()[i];
-                    }
-                    file = new File(path);
-                    if(file.isDirectory()) {
-                        currentDir = path;
-                    }else{
-                        System.out.println("path not found");
-                    }
+                path="";
+                path = currentDir;
+                for(int i=0; i<parser.getArgs().length; i++){
+                    path+="\\";
+                    path += parser.getArgs()[i];
+                }
+                file = new File(path);
+                if(file.isDirectory()) {
+                    currentDir = path;
+                }else{
+                    System.out.println("path not found");
+                }
             }
         }
     }
@@ -239,7 +239,9 @@ public class Terminal {
             dir = new File(currentDir);
             File[] list = dir.listFiles();
             for (File f : list) {
-                f.delete();
+                if(f.isDirectory()) {
+                    f.delete();
+                }
             }
             dir = null;
         }else {

@@ -89,8 +89,19 @@ public class Terminal {
             File file = new File(path);
             if (file.isDirectory()){
                 currentDir=file.getAbsolutePath();
-            }else{
-                System.out.println("path not found");
+            }else if(!path.startsWith(currentDir.split("\\\\")[0])){
+                    path="";
+                    path = currentDir;
+                    for(int i=0; i<parser.getArgs().length; i++){
+                        path+="\\";
+                        path += parser.getArgs()[i];
+                    }
+                    file = new File(path);
+                    if(file.isDirectory()) {
+                        currentDir = path;
+                    }else{
+                        System.out.println("path not found");
+                    }
             }
         }
     }
@@ -195,7 +206,7 @@ public class Terminal {
 
     //Making new directories by path or just new dir name.
     public void mkdir(){
-        if(parser.getArgs().length <=1) {
+        if(parser.getArgs().length <= 1) {
             File dir = new File(currentDir +"\\"+ parser.getArgs()[0]);
             boolean isCreated = dir.mkdir();
             if (isCreated) {
@@ -224,23 +235,33 @@ public class Terminal {
     public void rmdir(){
         File dir =null;
 
-        if(parser.getArgs().length <=1) {
-            dir = new File(currentDir +"\\"+ parser.getArgs()[0]);
-        }else if(parser.getArgs().length>1){
-            String new_path = "\\";
-            for (int i = 0; i < parser.getArgs().length; i++) {
-                new_path += (parser.getArgs()[i] + "\\");
+        if(parser.getArgs()[0].trim().equals("*")){
+            dir = new File(currentDir);
+            File[] list = dir.listFiles();
+            for (File f : list) {
+                f.delete();
             }
-            dir = new File(currentDir+new_path);
+            dir = null;
+        }else {
+            if (parser.getArgs().length <= 1) {
+                dir = new File(currentDir + "\\" + parser.getArgs()[0]);
+            } else if (parser.getArgs().length > 1) {
+                String new_path = "\\";
+                for (int i = 0; i < parser.getArgs().length; i++) {
+                    new_path += (parser.getArgs()[i] + "\\");
+                }
+                dir = new File(currentDir + new_path);
+            }
         }
-
-        boolean isDeleted = dir.delete();
-        if (isDeleted) {
-            System.out.println("Directory deleted successfully!");
-        } else if(dir.exists()){
-            System.out.println("Error: directory contains files!");
-        }else{
-            System.out.println("Error: directory doesn't exist!");
+        if(dir!=null){
+            boolean isDeleted = dir.delete();
+            if (isDeleted) {
+                System.out.println("Directory deleted successfully!");
+            } else if(dir.exists()){
+                System.out.println("Error: directory contains files!");
+            }else{
+                System.out.println("Error: directory doesn't exist!");
+            }
         }
 
     }

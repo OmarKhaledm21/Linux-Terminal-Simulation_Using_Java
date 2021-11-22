@@ -190,8 +190,12 @@ public class Terminal {
         for(int i=0; i<parser.getArgs().length; i++){
             path.append(parser.getArgs()[i]);
         }
-
-        File file = new File(currentDir+"\\"+path.toString());
+        File file;
+        if(path.toString().trim().contains(currentDir.split("\\\\")[0])){
+            file = new File(path.toString());
+        }else{
+            file = new File(currentDir+"\\"+path.toString());
+        }
 
         try {
             if (!file.exists()) {
